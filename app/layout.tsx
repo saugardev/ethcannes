@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
-import PWAProvider from "./components/PWAProvider";
+import PWAProvider from "./components/pwa-provider";
+import TransitionProvider from "./components/transition-provider";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -28,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
@@ -36,12 +37,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Buddy" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <meta name="view-transition" content="same-origin" />
+        <style>{`
+          @view-transition {
+            navigation: auto;
+          }
+        `}</style>
       </head>
-      <body
-        className={`${ibmPlexSans.variable} antialiased`}
-      >
-        <PWAProvider />
-        {children}
+      <body className={`${ibmPlexSans.variable} font-sans bg-base-100 text-base-content antialiased`}>
+        <TransitionProvider>
+          <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
+            <PWAProvider />
+            {children}
+          </div>
+        </TransitionProvider>
       </body>
     </html>
   );
