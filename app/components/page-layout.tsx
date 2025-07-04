@@ -21,16 +21,16 @@ export default function PageLayout({
   className = ''
 }: PageLayoutProps) {
   return (
-    <div className={`w-full min-h-screen relative ${className}`}>
+    <div className={`w-full min-h-screen relative  ${className}`}>
       <Header 
         title={title}
         showBackButton={showBackButton}
         onBackClick={onBackClick}
         onOptionsClick={onOptionsClick}
       />
-      <main className="relative pt-[70px] pb-[90px]">
+      <main className="relative h-screen">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-base-100/50 to-base-200/30 pointer-events-none"></div>
-        <div className="relative z-10 min-h-full overflow-y-auto">
+        <div className="relative z-10 h-full overflow-y-auto">
           {children}
         </div>
       </main>
