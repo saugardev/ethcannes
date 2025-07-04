@@ -21,7 +21,7 @@ export default function PageLayout({
   className = ''
 }: PageLayoutProps) {
   return (
-    <div className={`w-full min-h-screen relative  ${className}`}>
+    <div className={`w-full min-h-screen relative bg-background ${className}`}>
       <Header 
         title={title}
         showBackButton={showBackButton}
@@ -29,7 +29,6 @@ export default function PageLayout({
         onOptionsClick={onOptionsClick}
       />
       <main className="relative h-screen">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-base-100/50 to-base-200/30 pointer-events-none"></div>
         <div className="relative z-10 h-full overflow-y-auto">
           {children}
         </div>

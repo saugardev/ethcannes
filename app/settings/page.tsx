@@ -15,7 +15,7 @@ export default function SettingsPage() {
       <div className="p-4 sm:p-6 lg:p-8 space-y-4 lg:space-y-6">
         <div className="prose prose-sm lg:prose-base max-w-none">
           <div className="space-y-6">
-            <div className="card bg-base-200/50 shadow-lg border border-base-300">
+            <div className="card bg-base-200/50 shadow-lg">
               <div className="card-body">
                 <div className="flex items-center gap-3">
                   <div className="badge badge-primary badge-lg">⚙️</div>
@@ -29,7 +29,7 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
-            <div className="card bg-base-200/50 shadow-lg border border-base-300">
+            <div className="card bg-base-200/50 shadow-lg">
               <div className="card-body">
                 <div className="flex items-center gap-3">
                   <div className="badge badge-secondary badge-lg">🔒</div>

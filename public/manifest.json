@@ -3,9 +3,9 @@
   "short_name": "Buddy",
   "description": "Simple and secure payment processing made easy",
   "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "display": "fullscreen",
+  "background_color": "#eeeef4",
+  "theme_color": "#eeeef4",
   "orientation": "portrait-primary",
   "icons": [
     {

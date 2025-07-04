@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "Buddy - Simple Payment Processing",
   description: "Simple and secure payment processing made easy",
   manifest: "/manifest.json",
-  themeColor: "#000000",
+  themeColor: "#eeeef4",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" data-theme="light">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#eeeef4" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Buddy" />
@@ -45,9 +45,9 @@ export default function RootLayout({
           }
         `}</style>
       </head>
-      <body className={`${ibmPlexSans.variable} font-sans bg-base-100 text-base-content antialiased overflow-x-hidden`}>
+      <body className={`${ibmPlexSans.variable} font-sans bg-background text-base-content antialiased overflow-x-hidden`}>
         <TransitionProvider>
-          <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200 relative">
+          <div className="min-h-screen relative">
             <PWAProvider />
             {children}
             

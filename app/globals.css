@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 238, 238, 244;
+  --foreground: 2, 4, 8;
+  --card-background: 247, 250, 251;
+  --text-primary: 2, 4, 8;
+  --text-secondary: 156, 156, 158;
+  --accent: 129,29,236;
+}
+
 /* Custom animations for subpage transitions */
 @keyframes slideInRight {
   from {
@@ -51,4 +60,5 @@
 /* Prevent horizontal scrolling during transitions */
 html, body {
   overflow-x: hidden;
+  background-color: rgb(var(--background));
 }

@@ -15,7 +15,7 @@ export default function ProfilePage() {
       <div className="p-4 sm:p-6 lg:p-8 space-y-4 lg:space-y-6">
         <div className="prose prose-sm lg:prose-base max-w-none">
           <div className="space-y-6">
-            <div className="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow-xl border border-base-300">
+            <div className="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow-xl">
               <div className="card-body text-center">
                 <div className="avatar placeholder mx-auto">
                   <div className="bg-primary text-primary-content rounded-full w-24 shadow-lg">
@@ -27,7 +27,7 @@ export default function ProfilePage() {
                 <div className="badge badge-accent badge-lg mt-2">Premium User</div>
               </div>
             </div>
-            <div className="stats shadow-lg border border-base-300">
+            <div className="stats shadow-lg">
               <div className="stat">
                 <div className="stat-title">Total Payments</div>
                 <div className="stat-value text-primary">147</div>

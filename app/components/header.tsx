@@ -16,7 +16,7 @@ export default function Header({
   onOptionsClick 
 }: HeaderProps) {
   return (
-    <div className="navbar bg-base-100/95 backdrop-blur-sm border-b border-base-300 sticky top-0 z-50 shadow-sm px-4 lg:px-6">
+    <div className="navbar sticky top-0 z-50 px-4 lg:px-6">
       <div className="navbar-start">
         {showBackButton && (
           <button 

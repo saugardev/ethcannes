@@ -32,7 +32,8 @@ function HomePage() {
       onOptionsClick={handleOptionsClick}
     >
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
-        <div className="hero bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl shadow-xl border border-base-300">
+        <div className='text-text-primary opacity-70'>Welcome to Buddy</div>
+        <div className="hero rounded-2xl bg-card-background">
           <div className="hero-content text-center py-8 lg:py-12">
             <div className="max-w-md">
               <div className="text-5xl lg:text-6xl mb-4">💳</div>
@@ -54,7 +55,7 @@ function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-          <div className="card bg-gradient-to-br from-primary/10 to-primary/20 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300">
+          <div className="card bg-card-background transition-all duration-300">
             <div className="card-body p-4 lg:p-6">
               <div className="flex items-center gap-3">
                 <div className="text-2xl lg:text-3xl">💰</div>
@@ -65,7 +66,7 @@ function HomePage() {
               </div>
             </div>
           </div>
-          <div className="card bg-gradient-to-br from-secondary/10 to-secondary/20 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300">
+          <div className="card bg-card-background transition-all duration-300">
             <div className="card-body p-4 lg:p-6">
               <div className="flex items-center gap-3">
                 <div className="text-2xl lg:text-3xl">📊</div>
@@ -78,28 +79,28 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="card bg-base-200/50 shadow-xl border border-base-300">
+        <div className="card bg-card-background shadow-xl">
           <div className="card-body p-4 lg:p-6">
             <h3 className="card-title text-lg lg:text-xl flex items-center gap-2">
               <span>📈</span>
               Recent Activity
             </h3>
             <div className="space-y-3 lg:space-y-4 mt-4">
-              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg border border-base-300">
+              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="badge badge-success badge-sm">✓</div>
                   <span className="text-sm lg:text-base">Payment received</span>
                 </div>
                 <span className="text-success font-bold text-sm lg:text-base">+$25.00</span>
               </div>
-              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg border border-base-300">
+              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="badge badge-warning badge-sm">⚠</div>
                   <span className="text-sm lg:text-base">Service fee</span>
                 </div>
                 <span className="text-warning font-bold text-sm lg:text-base">-$1.25</span>
               </div>
-              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg border border-base-300">
+              <div className="flex justify-between items-center p-3 lg:p-4 bg-base-100 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="badge badge-info badge-sm">ℹ</div>
                   <span className="text-sm lg:text-base">Account verification</span>

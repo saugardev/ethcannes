@@ -12,6 +12,14 @@ export default {
       fontFamily: {
         sans: ['var(--font-ibm-plex-sans)', 'system-ui', 'sans-serif'],
       },
+      colors: {
+        background: 'rgb(var(--background))',
+        foreground: 'rgb(var(--foreground))',
+        'card-background': 'rgb(var(--card-background))',
+        'text-primary': 'rgb(var(--text-primary))',
+        'text-secondary': 'rgb(var(--text-secondary))',
+        accent: 'rgb(var(--accent))',
+      },
     },
   },
   plugins: [daisyui],
