@@ -28,9 +28,9 @@ export default function PageLayout({
         onBackClick={onBackClick}
         onOptionsClick={onOptionsClick}
       />
-      <main className="relative">
+      <main className="relative pt-[70px] pb-[90px]">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-base-100/50 to-base-200/30 pointer-events-none"></div>
-        <div className="relative z-10 pb-safe">
+        <div className="relative z-10 min-h-full overflow-y-auto">
           {children}
         </div>
       </main>

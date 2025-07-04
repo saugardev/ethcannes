@@ -3,17 +3,23 @@
 import { useTransition } from './transition-provider';
 
 export function useViewTransitionRouter() {
-  const { navigate, goBack } = useTransition();
+  const { navigate, navigateInstant, goBack } = useTransition();
 
   const navigateWithTransition = (url: string) => {
-    console.log('🚀 Navigating forward to:', url);
     navigate(url);
   };
 
+  const navigateWithoutTransition = (url: string) => {
+    navigateInstant(url);
+  };
+
   const goBackWithTransition = () => {
-    console.log('🚀 Navigating back');
     goBack();
   };
 
-  return { navigateWithTransition, goBack: goBackWithTransition };
+  return { 
+    navigateWithTransition, 
+    navigateWithoutTransition,
+    goBack: goBackWithTransition 
+  };
 } 

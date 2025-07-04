@@ -3,6 +3,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/pwa-provider";
 import TransitionProvider from "./components/transition-provider";
+import MobileMenu from "./components/mobile-menu";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -44,13 +45,17 @@ export default function RootLayout({
           }
         `}</style>
       </head>
-      <body className={`${ibmPlexSans.variable} font-sans bg-base-100 text-base-content antialiased`}>
+      <body className={`${ibmPlexSans.variable} font-sans bg-base-100 text-base-content antialiased overflow-x-hidden`}>
         <TransitionProvider>
-          <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
+          <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200 relative">
             <PWAProvider />
             {children}
+            
+            {/* Global Mobile Menu - Inside provider but outside animations */}
           </div>
         </TransitionProvider>
+        <MobileMenu />
+
       </body>
     </html>
   );

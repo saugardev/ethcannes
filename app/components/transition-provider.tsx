@@ -8,6 +8,7 @@ interface TransitionContextType {
   direction: 'forward' | 'back';
   setDirection: (direction: 'forward' | 'back') => void;
   navigate: (url: string) => void;
+  navigateInstant: (url: string) => void;
   goBack: () => void;
 }
 
@@ -45,7 +46,6 @@ export default function TransitionProvider({ children }: TransitionProviderProps
   const navigate = (url: string) => {
     if (isTransitioning) return;
     
-    console.log('🚀 Starting FORWARD navigation to:', url);
     currentDirection.current = 'forward';
     setIsTransitioning(true);
     pendingNavigation.current = url;
@@ -54,10 +54,15 @@ export default function TransitionProvider({ children }: TransitionProviderProps
     setTransitionKey(prev => prev + 1);
   };
 
+  const navigateInstant = (url: string) => {
+    if (isTransitioning) return;
+    
+    router.push(url);
+  };
+
   const goBack = () => {
     if (isTransitioning) return;
     
-    console.log('🚀 Starting BACK navigation');
     currentDirection.current = 'back';
     setIsTransitioning(true);
     pendingNavigation.current = 'back';
@@ -68,7 +73,6 @@ export default function TransitionProvider({ children }: TransitionProviderProps
 
   // Handle the actual navigation after exit animation
   const handleExitComplete = () => {
-    console.log('🚀 Exit animation complete, navigating with direction:', currentDirection.current);
     if (pendingNavigation.current) {
       if (pendingNavigation.current === 'back') {
         router.back();
@@ -82,7 +86,6 @@ export default function TransitionProvider({ children }: TransitionProviderProps
   // Reset transition state when pathname changes (after navigation)
   useEffect(() => {
     if (isTransitioning && !pendingNavigation.current) {
-      console.log('🚀 Navigation completed, resetting transition state');
       const timer = setTimeout(() => {
         setIsTransitioning(false);
       }, 350);
@@ -114,6 +117,7 @@ export default function TransitionProvider({ children }: TransitionProviderProps
       direction: currentDirection.current, 
       setDirection: () => {}, // Not used anymore
       navigate, 
+      navigateInstant,
       goBack 
     }}>
       <div className="relative overflow-hidden min-h-screen">
@@ -128,34 +132,13 @@ export default function TransitionProvider({ children }: TransitionProviderProps
               currentDirection.current === 'forward' ? slideVariants.forwardInitial : slideVariants.backInitial
             )}
             animate={currentDirection.current === 'forward' ? slideVariants.forwardAnimate : slideVariants.backAnimate}
-            exit={(() => {
-              const exitVariant = currentDirection.current === 'forward' ? slideVariants.forwardExit : slideVariants.backExit;
-              console.log('🚀 Using exit variant:', currentDirection.current, 'exitX:', exitVariant.x);
-              return exitVariant;
-            })()}
+            exit={currentDirection.current === 'forward' ? slideVariants.forwardExit : slideVariants.backExit}
             transition={transition}
             className="w-full h-full fixed inset-0 bg-base-100"
           >
             {children}
           </motion.div>
         </AnimatePresence>
-      </div>
-      
-      {/* Debug indicator */}
-      <div className="fixed top-4 left-4 z-50 pointer-events-none">
-        <div className={`px-3 py-1 rounded text-white text-sm font-medium ${
-          currentDirection.current === 'forward' ? 'bg-green-500' : 'bg-red-500'
-        }`}>
-          {currentDirection.current === 'forward' ? '▶️ FORWARD' : '🔙 BACK'}
-          {isTransitioning && ' (transitioning)'}
-          {pendingNavigation.current && ' (pending)'}
-        </div>
-        <div className="text-xs text-white bg-black/50 px-2 py-1 rounded mt-1">
-          Path: {pathname} | Key: {transitionKey}
-        </div>
-        <div className="text-xs text-white bg-black/50 px-2 py-1 rounded mt-1">
-          Exit: {currentDirection.current === 'forward' ? 'LEFT' : 'RIGHT'} | Enter: {currentDirection.current === 'forward' ? 'RIGHT' : 'LEFT'}
-        </div>
       </div>
     </TransitionContext.Provider>
   );
