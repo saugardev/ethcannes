@@ -49,17 +49,17 @@ export default function RootLayout({
         `}</style>
       </head>
       <body className={`${ibmPlexSans.variable} font-sans bg-background text-base-content antialiased overflow-x-hidden`}>
-        <TransitionProvider>
-          <NexusProvider>
-            <PrivyProvider>
+        <NexusProvider>
+          <PrivyProvider>
+            <WalletConnection />
+            <PWAProvider />
             <div className="min-h-screen relative">
-              <WalletConnection />
-              <PWAProvider />
+              <TransitionProvider>
                 {children}
-              </div>
-            </PrivyProvider>
-          </NexusProvider>
-        </TransitionProvider>
+              </TransitionProvider>
+            </div>
+          </PrivyProvider>
+        </NexusProvider>
         <MobileMenu />
 
       </body>
