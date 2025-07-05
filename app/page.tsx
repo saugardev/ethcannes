@@ -151,8 +151,6 @@ function HomePage() {
             </div>
           </div>
         </div>
-
-        <BridgeInterface />
       </LoginGate>
     </PageLayout>
   );
