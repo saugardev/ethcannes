@@ -8,31 +8,12 @@ import BridgeInterface from './components/bridge-interface';
 function HomePage() {
   const { navigateWithTransition } = useViewTransitionRouter();
 
-  const handleOptionsClick = (option: number) => {
-    console.log(`Option ${option} clicked`);
-    
-    switch (option) {
-      case 1:
-        navigateWithTransition('/settings');
-        break;
-      case 2:
-        navigateWithTransition('/profile');
-        break;
-      case 3:
-        navigateWithTransition('/help');
-        break;
-    }
-  };
-
   const openDemoSubpage = () => {
     navigateWithTransition('/demo');
   };
 
   return (
-    <PageLayout 
-      title="Buddy"
-      onOptionsClick={handleOptionsClick}
-    >
+    <PageLayout title="Buddy">
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
         <div className='text-text-primary opacity-70'>Welcome to Buddy</div>
         <div className="hero rounded-2xl bg-card-background">

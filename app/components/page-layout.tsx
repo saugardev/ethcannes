@@ -17,7 +17,6 @@ export default function PageLayout({
   children, 
   showBackButton = false,
   onBackClick,
-  onOptionsClick,
   className = ''
 }: PageLayoutProps) {
   return (
@@ -26,7 +25,6 @@ export default function PageLayout({
         title={title}
         showBackButton={showBackButton}
         onBackClick={onBackClick}
-        onOptionsClick={onOptionsClick}
       />
       <main className="relative h-screen">
         <div className="relative z-10 h-full overflow-y-auto">
