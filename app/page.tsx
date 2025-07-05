@@ -2,7 +2,6 @@
 
 import PageLayout from './components/page-layout';
 
-import BridgeInterface from './components/bridge-interface';
 import LoginGate from './components/login-gate';
 import { useState, useEffect, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
@@ -14,7 +13,6 @@ function HomePage() {
   const { authenticated } = usePrivy();
   const { sdk } = useNexus();
   const [balances, setBalances] = useState<UserAsset[]>([]);
-  const [loading, setLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -40,14 +38,11 @@ function HomePage() {
   const fetchBalances = useCallback(async () => {
     if (!authenticated || !sdk || !isInitialized) return;
 
-    setLoading(true);
     try {
       const unifiedBalances = await sdk.getUnifiedBalances();
       setBalances(unifiedBalances);
     } catch (error) {
       console.error("Failed to fetch balances:", error);
-    } finally {
-      setLoading(false);
     }
   }, [authenticated, sdk, isInitialized]);
 
