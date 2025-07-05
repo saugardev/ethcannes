@@ -2,9 +2,11 @@
 
 import PageLayout from '../components/page-layout';
 import { useViewTransitionRouter } from '../components/navigation';
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function SettingsPage() {
   const { goBack } = useViewTransitionRouter();
+  const { user, logout } = usePrivy();
 
   return (
     <PageLayout 
@@ -40,6 +42,27 @@ export default function SettingsPage() {
                 </div>
                 <div className="card-actions justify-end mt-4">
                   <button className="btn btn-secondary btn-sm">Manage</button>
+                </div>
+              </div>
+            </div>
+            <div className="card bg-base-200/50 shadow-lg">
+              <div className="card-body">
+                <div className="flex items-center gap-3">
+                  <div className="badge badge-accent badge-lg">💳</div>
+                  <div>
+                    <h3 className="card-title text-lg">Wallet Connection</h3>
+                    <p className="text-base-content/70">
+                      Connected: {user?.email?.address || user?.wallet?.address?.slice(0, 6) + "..." + user?.wallet?.address?.slice(-4)}
+                    </p>
+                  </div>
+                </div>
+                <div className="card-actions justify-end mt-4">
+                  <button 
+                    onClick={logout}
+                    className="btn btn-error btn-sm"
+                  >
+                    Disconnect
+                  </button>
                 </div>
               </div>
             </div>

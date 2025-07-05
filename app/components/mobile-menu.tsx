@@ -9,6 +9,9 @@ import {
   CogIcon 
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { usePrivy } from "@privy-io/react-auth";
+import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const parentPages = [
   { path: '/history', title: 'Tx History', icon: 'history' },
@@ -21,6 +24,28 @@ const parentPages = [
 export default function MobileMenu() {
   const pathname = usePathname();
   const router = useRouter();
+  const { ready, authenticated } = usePrivy();
+  const previousAuthState = useRef<boolean | null>(null);
+  const isFreshLogin = useRef(false);
+
+  // Track authentication state changes to detect fresh logins
+  useEffect(() => {
+    if (ready) {
+      if (previousAuthState.current === false && authenticated === true) {
+        // User just logged in (transition from false to true)
+        isFreshLogin.current = true;
+        // Reset the flag after animation completes
+        setTimeout(() => {
+          isFreshLogin.current = false;
+        }, 3000);
+      }
+      previousAuthState.current = authenticated;
+    }
+  }, [ready, authenticated]);
+
+  if (!ready || !authenticated) {
+    return null;
+  }
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -53,15 +78,21 @@ export default function MobileMenu() {
     }
   };
 
-  return (
-    <div 
+      return (
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeInOut", delay: isFreshLogin.current ? 2 : 0 }}
       className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-base-300 z-[9999] pb-safe"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999 }}
     >
       <div className="flex items-center justify-around px-2 py-3">
-        {parentPages.map((page) => (
-          <button
+        {parentPages.map((page, index) => (
+          <motion.button
             key={page.path}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
             onClick={() => handleNavigation(page.path)}
             className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 min-w-[60px] relative ${
               pathname === page.path
@@ -72,11 +103,16 @@ export default function MobileMenu() {
             <div className="mb-1">{renderIcon(page.icon, pathname === page.path)}</div>
             <div className="text-xs font-medium leading-tight">{page.title}</div>
             {pathname === page.path && (
-              <div className="absolute -top-1 w-1 h-1 bg-primary rounded-full"></div>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="absolute -top-1 w-1 h-1 bg-primary rounded-full"
+              />
             )}
-          </button>
+          </motion.button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 } 

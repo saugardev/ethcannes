@@ -7,6 +7,7 @@ import MobileMenu from "./components/mobile-menu";
 import NexusProvider from "@/providers/nexus-provider";
 import PrivyProvider from "@/providers/privy-provider";
 import WalletConnection from "./components/wallet-connection";
+import AuthRedirect from "./components/auth-redirect";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -53,14 +54,16 @@ export default function RootLayout({
           <PrivyProvider>
             <WalletConnection />
             <PWAProvider />
-            <div className="min-h-screen relative">
-              <TransitionProvider>
-                {children}
-              </TransitionProvider>
-            </div>
+            <AuthRedirect>
+              <div className="min-h-screen relative">
+                <TransitionProvider>
+                  {children}
+                </TransitionProvider>
+              </div>
+            </AuthRedirect>
+            <MobileMenu />
           </PrivyProvider>
         </NexusProvider>
-        <MobileMenu />
 
       </body>
     </html>
