@@ -19,7 +19,7 @@ import { sepolia } from "viem/chains";
 
 interface HaloResult {
   etherAddresses?: { [key: string]: string };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface AddressInfo {
@@ -38,8 +38,6 @@ function HomePage() {
   const [isCheckingApproval, setIsCheckingApproval] = useState(false);
   const [linkedCards, setLinkedCards] = useState<string[]>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
 
   // Contract addresses and configuration
   const SEPOLIA_RPC_URL = "https://sepolia.drpc.org";
@@ -99,7 +97,7 @@ function HomePage() {
     } finally {
       setIsCheckingApproval(false);
     }
-  }, [authenticated, user, publicClient]);
+  }, [authenticated, user, publicClient, USDC_CONTRACT_ADDRESS, USDC_ABI, HALO_PAYMENT_CONTRACT_ADDRESS]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const approveUSDC = async (userAddress: `0x${string}`) => {
     try {
@@ -151,15 +149,16 @@ function HomePage() {
 
       // After approval, proceed to scan for HaLo chips
       await scanForHaloChips();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error approving USDC:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
       // Provide more specific error messages
-      if (error.message.includes("does not match the target chain")) {
+      if (errorMessage.includes("does not match the target chain")) {
         console.error(
           "Please switch your wallet to Sepolia network and try again."
         );
-      } else if (error.message.includes("User rejected")) {
+      } else if (errorMessage.includes("User rejected")) {
         console.error(
           "Network switch was rejected. Please manually switch to Sepolia."
         );
@@ -168,8 +167,6 @@ function HomePage() {
   };
 
   const scanForHaloChips = async () => {
-    setIsScanning(true);
-
     try {
       if (!("NDEFReader" in window) && !navigator.credentials) {
         throw new Error("NFC not supported on this device/browser");
@@ -216,12 +213,10 @@ function HomePage() {
           fetchLinkedCards();
         }, 1000);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error scanning HaLo chips:", error);
-      // You might want to show a toast or alert here instead of setScanStatus
-      alert(`Error scanning HaLo chip: ${error.message || "Unknown error"}`);
-    } finally {
-      setIsScanning(false);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      alert(`Error scanning HaLo chip: ${errorMessage}`);
     }
   };
 
@@ -245,9 +240,9 @@ function HomePage() {
           method: "wallet_switchEthereumChain",
           params: [{ chainId: "0xaa36a7" }], // Sepolia chain ID in hex
         });
-      } catch (switchError: any) {
+      } catch (switchError: unknown) {
         // If the chain hasn't been added to the wallet, add it
-        if (switchError.code === 4902) {
+        if (switchError instanceof Error && 'code' in switchError && switchError.code === 4902) {
           await provider.request({
             method: "wallet_addEthereumChain",
             params: [
@@ -268,9 +263,10 @@ function HomePage() {
           throw switchError;
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error switching to Sepolia:", error);
-      throw new Error(`Failed to switch to Sepolia: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      throw new Error(`Failed to switch to Sepolia: ${errorMessage}`);
     }
   };
 
@@ -278,8 +274,6 @@ function HomePage() {
     if (!authenticated || !user?.wallet?.address) {
       return;
     }
-
-    setIsRegistering(true);
 
     try {
       const connectedWallet = wallets.find(
@@ -329,16 +323,17 @@ function HomePage() {
       setTimeout(() => {
         fetchLinkedCards();
       }, 2000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error registering HaLo address:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
       // Provide more specific error messages
-      if (error.message.includes("does not match the target chain")) {
+      if (errorMessage.includes("does not match the target chain")) {
         console.error(
           "Please switch your wallet to Sepolia network and try again."
         );
         alert("Please switch your wallet to Sepolia network and try again.");
-      } else if (error.message.includes("User rejected")) {
+      } else if (errorMessage.includes("User rejected")) {
         console.error(
           "Network switch was rejected. Please manually switch to Sepolia."
         );
@@ -347,12 +342,10 @@ function HomePage() {
         );
       } else {
         console.error(
-          `Registration failed: ${error.message || "Unknown error"}`
+          `Registration failed: ${errorMessage}`
         );
-        alert(`Registration failed: ${error.message || "Unknown error"}`);
+        alert(`Registration failed: ${errorMessage}`);
       }
-    } finally {
-      setIsRegistering(false);
     }
   };
 
@@ -390,7 +383,7 @@ function HomePage() {
     } finally {
       setIsLoadingCards(false);
     }
-  }, [authenticated, user, publicClient, linkedCards.length]);
+  }, [authenticated, user, publicClient, linkedCards.length, HALO_PAYMENT_CONTRACT_ADDRESS, HALO_PAYMENT_ABI]);
 
   const shortenAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -460,7 +453,7 @@ function HomePage() {
 
       return () => clearTimeout(timer);
     }
-  }, [authenticated, user?.wallet?.address]); // Removed fetchLinkedCards from deps to avoid loops
+  }, [authenticated, user?.wallet?.address, fetchLinkedCards]);
 
   // Get USDC balance
   const usdcBalance = balances.find((asset) => asset.symbol === "USDC");
@@ -615,7 +608,7 @@ function HomePage() {
                   <CreditCardIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">No cards linked yet</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Click "Add Card" to link your first HaLo card
+                    Click &quot;Add Card&quot; to link your first HaLo card
                   </p>
                 </div>
               )}
