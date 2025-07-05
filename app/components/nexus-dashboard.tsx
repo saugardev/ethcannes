@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNexus } from "@avail-project/nexus";
 import type { UserAsset } from "@avail-project/nexus";
@@ -12,7 +12,7 @@ export default function NexusDashboard() {
   const [loading, setLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const checkInitialization = async () => {
+  const checkInitialization = useCallback(async () => {
     if (!sdk) return false;
 
     try {
@@ -29,9 +29,9 @@ export default function NexusDashboard() {
       // If it's a different error, assume it's initialized but there's another issue
       return true;
     }
-  };
+  }, [sdk]);
 
-  const fetchBalances = async () => {
+  const fetchBalances = useCallback(async () => {
     if (!authenticated || !sdk || !isInitialized) return;
 
     setLoading(true);
@@ -44,7 +44,7 @@ export default function NexusDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [authenticated, sdk, isInitialized]);
 
   // Check if SDK is initialized
   useEffect(() => {
@@ -61,14 +61,14 @@ export default function NexusDashboard() {
     const interval = setInterval(checkInit, 1000);
 
     return () => clearInterval(interval);
-  }, [sdk]);
+  }, [sdk, checkInitialization]);
 
   // Fetch balances when SDK becomes initialized
   useEffect(() => {
     if (isInitialized) {
       fetchBalances();
     }
-  }, [authenticated, sdk, isInitialized]);
+  }, [authenticated, sdk, isInitialized, fetchBalances]);
 
   if (!authenticated) {
     return (
@@ -160,7 +160,7 @@ export default function NexusDashboard() {
       {/* Network Status */}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <p className="text-blue-800 dark:text-blue-200 text-sm">
-          🧪 <strong>Testnet Mode:</strong> You're connected to Avail Nexus
+          🧪 <strong>Testnet Mode:</strong> You&apos;re connected to Avail Nexus
           testnet. Use testnet tokens for safe experimentation.
         </p>
       </div>
