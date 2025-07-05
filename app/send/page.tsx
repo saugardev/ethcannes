@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNexus } from "@avail-project/nexus";
 import type { UserAsset } from "@avail-project/nexus";
-import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon, QrCodeIcon } from '@heroicons/react/24/outline';
 
 function SendPage() {
   const { authenticated } = usePrivy();
@@ -17,6 +17,7 @@ function SendPage() {
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showQrScanner, setShowQrScanner] = useState(false);
 
   const checkInitialization = useCallback(async () => {
     if (!sdk) return false;
@@ -87,10 +88,54 @@ function SendPage() {
   const isValidAmount = amount && parseFloat(amount) > 0 && parseFloat(amount) <= usdcAmount;
   const isValidRecipient = recipient && (recipient.startsWith('0x') || recipient.endsWith('.eth'));
 
+  const handleQrScan = async () => {
+    try {
+      // Request camera permission and access
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      setShowQrScanner(true);
+      
+      // In a real implementation, you would use a QR code scanner library like 'qr-scanner'
+      // For now, this is a placeholder that simulates scanning
+      setTimeout(() => {
+        // Mock QR code data - in reality this would come from the scanner
+        const mockQrData = "ethereum:0x742d35Cc6634C0532925a3b8D40C9F347d3C5D7e?value=25.5";
+        parseQrCode(mockQrData);
+        setShowQrScanner(false);
+        stream.getTracks().forEach(track => track.stop());
+      }, 2000);
+    } catch (error) {
+      console.error('Camera access denied or not supported:', error);
+      alert('Camera access is required to scan QR codes');
+    }
+  };
+
+  const parseQrCode = (qrData: string) => {
+    try {
+      // Parse ethereum URI format: ethereum:address?value=amount
+      if (qrData.startsWith('ethereum:')) {
+        const url = new URL(qrData);
+        const address = url.pathname;
+        const value = url.searchParams.get('value');
+        
+        if (address) {
+          setRecipient(address);
+        }
+        if (value) {
+          setAmount(value);
+        }
+      } else if (qrData.startsWith('0x') || qrData.endsWith('.eth')) {
+        // Simple address format
+        setRecipient(qrData);
+      }
+    } catch (error) {
+      console.error('Invalid QR code format:', error);
+    }
+  };
+
   return (
     <PageLayout title="Send">
       <LoginGate>
-        <div className="p-4 sm:p-6 lg:p-8 space-y-4">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 relative">
           <div className='text-text-primary opacity-70'>Send USDC</div>
           
           {/* Balance Display */}
@@ -152,14 +197,42 @@ function SendPage() {
           </div>
 
           {/* Send Button */}
-          <BlackButton
-            onClick={handleSend}
-            disabled={!isValidAmount || !isValidRecipient || isLoading || !authenticated || !isInitialized}
-            className="w-full"
-            icon={isLoading ? <div className="loading loading-spinner loading-sm"></div> : <PaperAirplaneIcon className='w-5 h-5'/>}
-          >
-            Send
-          </BlackButton>
+          <div className="flex gap-3">
+            <BlackButton
+              onClick={handleSend}
+              disabled={!isValidAmount || !isValidRecipient || isLoading || !authenticated || !isInitialized}
+              className="flex-1"
+              icon={isLoading ? <div className="loading loading-spinner loading-sm"></div> : <PaperAirplaneIcon className='w-5 h-5'/>}
+            >
+              Send
+            </BlackButton>
+            <button
+              onClick={handleQrScan}
+              disabled={!authenticated || !isInitialized}
+              className="bg-white w-12 h-12 rounded-full transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              <QrCodeIcon className="w-5 h-5 text-gray-700" />
+            </button>
+          </div>
+
+          {/* QR Scanner Modal */}
+          {showQrScanner && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+                <h3 className="text-lg font-semibold mb-4">Scanning QR Code</h3>
+                <div className="bg-gray-100 rounded-lg p-8 text-center">
+                  <div className="loading loading-spinner loading-lg"></div>
+                  <p className="mt-4 text-gray-600">Point your camera at the QR code</p>
+                </div>
+                <button
+                  onClick={() => setShowQrScanner(false)}
+                  className="mt-4 w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </LoginGate>
     </PageLayout>
