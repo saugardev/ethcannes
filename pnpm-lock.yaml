@@ -10,12 +10,18 @@ dependencies:
   '@privy-io/react-auth':
     specifier: ^2.17.3
     version: 2.17.3(@solana/web3.js@1.98.2)(@types/react@19.1.8)(bs58@6.0.0)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
+  '@types/qrcode':
+    specifier: ^1.5.5
+    version: 1.5.5
   framer-motion:
     specifier: ^12.23.0
     version: 12.23.0(react-dom@19.1.0)(react@19.1.0)
   next:
     specifier: 15.3.4
     version: 15.3.4(react-dom@19.1.0)(react@19.1.0)
+  qrcode:
+    specifier: ^1.5.4
+    version: 1.5.4
   react:
     specifier: ^19.0.0
     version: 19.1.0
@@ -3134,6 +3140,12 @@ packages:
 
   /@types/pbkdf2@3.1.2:
     resolution: {integrity: sha512-uRwJqmiXmh9++aSu1VNEn3iIxWOhd8AHXNSdlaLfdAAdSTY9jYVeGWnzejM3dvrkbqE3/hyQkQQ29IFATEGlew==}
+    dependencies:
+      '@types/node': 20.19.4
+    dev: false
+
+  /@types/qrcode@1.5.5:
+    resolution: {integrity: sha512-CdfBi/e3Qk+3Z/fXYShipBT13OJ2fDO2Q2w5CIP5anLTLIndQG9z6P1cnm+8zCWSpm5dnxMFd/uREtb0EXuQzg==}
     dependencies:
       '@types/node': 20.19.4
     dev: false

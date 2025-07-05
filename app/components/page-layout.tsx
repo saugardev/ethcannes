@@ -8,6 +8,8 @@ interface PageLayoutProps {
   children: ReactNode;
   showBackButton?: boolean;
   onBackClick?: () => void;
+  showCloseButton?: boolean;
+  onCloseClick?: () => void;
   onOptionsClick?: (option: number) => void;
   className?: string;
 }
@@ -17,6 +19,8 @@ export default function PageLayout({
   children, 
   showBackButton = false,
   onBackClick,
+  showCloseButton = false,
+  onCloseClick,
   className = ''
 }: PageLayoutProps) {
   return (
@@ -25,6 +29,8 @@ export default function PageLayout({
         title={title}
         showBackButton={showBackButton}
         onBackClick={onBackClick}
+        showCloseButton={showCloseButton}
+        onCloseClick={onCloseClick}
       />
       <main className="relative h-screen">
         <div className="relative z-10 h-full overflow-y-auto">

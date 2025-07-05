@@ -3,6 +3,8 @@
 import PageLayout from '../components/page-layout';
 import LoginGate from '../components/login-gate';
 import BlackButton from '../components/black-button';
+import QrModal from '../components/qr-modal';
+import NfcModal from '../components/nfc-modal';
 import { useState, useEffect, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNexus } from "@avail-project/nexus";
@@ -10,11 +12,13 @@ import type { UserAsset } from "@avail-project/nexus";
 import { QrCodeIcon, WifiIcon } from '@heroicons/react/24/outline';
 
 function ReceivePage() {
-  const { authenticated } = usePrivy();
+  const { authenticated, user } = usePrivy();
   const { sdk } = useNexus();
   const [balances, setBalances] = useState<UserAsset[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [amount, setAmount] = useState('');
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [showNfcModal, setShowNfcModal] = useState(false);
 
   const checkInitialization = useCallback(async () => {
     if (!sdk) return false;
@@ -69,29 +73,18 @@ function ReceivePage() {
 
   const handleQrPayment = async () => {
     if (!amount || !authenticated || !isInitialized) return;
-    
-    try {
-      // TODO: Generate QR code for payment request
-      console.log('Generating QR code for amount:', amount);
-      // In a real implementation, you would generate a QR code with payment details
-    } catch (error) {
-      console.error('QR generation failed:', error);
-    }
+    setShowQrModal(true);
   };
 
   const handleNfcPayment = async () => {
     if (!amount || !authenticated || !isInitialized) return;
-    
-    try {
-      // TODO: Setup NFC payment request
-      console.log('Setting up NFC payment for amount:', amount);
-      // In a real implementation, you would setup NFC payment request
-    } catch (error) {
-      console.error('NFC setup failed:', error);
-    }
+    setShowNfcModal(true);
   };
 
   const isValidAmount = amount && parseFloat(amount) > 0;
+  
+  // Get user's wallet address
+  const userAddress = user?.wallet?.address || 'Your Address';
 
   return (
     <PageLayout title="Receive">
@@ -155,6 +148,24 @@ function ReceivePage() {
               <span>NFC</span>
             </button>
           </div>
+
+          {/* Modals */}
+          <QrModal
+            isOpen={showQrModal}
+            onClose={() => {
+              setShowQrModal(false);
+            }}
+            amount={amount}
+            address={userAddress}
+          />
+          <NfcModal
+            isOpen={showNfcModal}
+            onClose={() => {
+              setShowNfcModal(false);
+            }}
+            amount={amount}
+            address={userAddress}
+          />
         </div>
       </LoginGate>
     </PageLayout>

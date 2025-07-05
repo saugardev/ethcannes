@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { usePrivy } from "@privy-io/react-auth";
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import { useModal } from '@/providers/modal-provider';
 
 const parentPages = [
   { path: '/history', title: 'Tx History', icon: 'history' },
@@ -25,6 +26,7 @@ export default function MobileMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { ready, authenticated } = usePrivy();
+  const { isAnyModalOpen } = useModal();
   const previousAuthState = useRef<boolean | null>(null);
   const isFreshLogin = useRef(false);
 
@@ -43,7 +45,7 @@ export default function MobileMenu() {
     }
   }, [ready, authenticated]);
 
-  if (!ready || !authenticated) {
+  if (!ready || !authenticated || isAnyModalOpen) {
     return null;
   }
 
