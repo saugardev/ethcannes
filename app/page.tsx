@@ -2,6 +2,8 @@
 
 import PageLayout from './components/page-layout';
 import { useViewTransitionRouter } from './components/navigation';
+import NexusDashboard from './components/nexus-dashboard';
+import BridgeInterface from './components/bridge-interface';
 
 function HomePage() {
   const { navigateWithTransition } = useViewTransitionRouter();
@@ -111,6 +113,8 @@ function HomePage() {
           </div>
         </div>
       </div>
+      <NexusDashboard />
+      <BridgeInterface />
     </PageLayout>
   );
 }

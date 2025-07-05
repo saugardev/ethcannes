@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
-import PWAProvider from "./components/pwa-provider";
+import PWAProvider from "@/providers/pwa-provider";
 import TransitionProvider from "./components/transition-provider";
 import MobileMenu from "./components/mobile-menu";
+import NexusProvider from "@/providers/nexus-provider";
+import PrivyProvider from "@/providers/privy-provider";
+import WalletConnection from "./components/wallet-connection";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -47,12 +50,15 @@ export default function RootLayout({
       </head>
       <body className={`${ibmPlexSans.variable} font-sans bg-background text-base-content antialiased overflow-x-hidden`}>
         <TransitionProvider>
-          <div className="min-h-screen relative">
-            <PWAProvider />
-            {children}
-            
-            {/* Global Mobile Menu - Inside provider but outside animations */}
-          </div>
+          <NexusProvider>
+            <PrivyProvider>
+            <div className="min-h-screen relative">
+              <WalletConnection />
+              <PWAProvider />
+                {children}
+              </div>
+            </PrivyProvider>
+          </NexusProvider>
         </TransitionProvider>
         <MobileMenu />
 

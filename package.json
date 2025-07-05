@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@avail-project/nexus": "0.1.1-dev.2",
     "@heroicons/react": "^2.2.0",
+    "@privy-io/react-auth": "^2.17.3",
     "framer-motion": "^12.23.0",
     "next": "15.3.4",
     "react": "^19.0.0",
