@@ -53,7 +53,7 @@ export default function PrivyProviderWrapper({
           logo: process.env.NEXT_PUBLIC_APP_LOGO_URL,
           showWalletLoginFirst: false,
         },
-        loginMethods: ["email", "wallet", "sms"],
+        loginMethods: ["email"],
         embeddedWallets: {
           createOnLogin: "users-without-wallets",
           requireUserPasswordOnCreate: false,
