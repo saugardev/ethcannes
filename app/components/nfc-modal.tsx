@@ -302,6 +302,19 @@ export default function NfcModal({
     setPaymentStatus("Preparing payment...");
 
     try {
+      // Check and switch to Sepolia network if needed
+      const provider = await connectedWallet.getEthereumProvider();
+      if (!provider) {
+        throw new Error("No wallet provider available");
+      }
+
+      const currentChainId = await provider.request({ method: "eth_chainId" });
+      if (currentChainId !== "0xaa36a7") {
+        setPaymentStatus("Switching to Sepolia network...");
+        await switchToSepolia();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+
       // Get merchant address from connected wallet
       const merchantAddress = user.wallet.address;
       const haloAddress = addressInfo.address as `0x${string}`;
@@ -354,7 +367,6 @@ export default function NfcModal({
       setPaymentStatus("Executing payment on blockchain...");
 
       // Create wallet client for transaction
-      const provider = await connectedWallet.getEthereumProvider();
       const walletClient = createWalletClient({
         chain: sepolia,
         transport: custom(provider),
@@ -386,6 +398,56 @@ export default function NfcModal({
       setStatus("Payment completed successfully!");
     } catch (err: any) {
       throw new Error(`Payment execution failed: ${err.message}`);
+    }
+  };
+
+  // Switch to Sepolia network
+  const switchToSepolia = async () => {
+    try {
+      const connectedWallet = wallets.find(
+        (wallet) => wallet.walletClientType === "privy"
+      );
+      if (!connectedWallet) {
+        throw new Error("No wallet connected");
+      }
+
+      const provider = await connectedWallet.getEthereumProvider();
+      if (!provider) {
+        throw new Error("No wallet provider available");
+      }
+
+      // Try to switch to Sepolia
+      try {
+        await provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0xaa36a7" }], // Sepolia chain ID in hex
+        });
+      } catch (switchError: any) {
+        // If the chain hasn't been added to the wallet, add it
+        if (switchError.code === 4902) {
+          await provider.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: "0xaa36a7",
+                chainName: "Sepolia",
+                nativeCurrency: {
+                  name: "Sepolia Ether",
+                  symbol: "ETH",
+                  decimals: 18,
+                },
+                rpcUrls: ["https://sepolia.drpc.org"],
+                blockExplorerUrls: ["https://sepolia.etherscan.io"],
+              },
+            ],
+          });
+        } else {
+          throw switchError;
+        }
+      }
+    } catch (error: any) {
+      console.error("Error switching to Sepolia:", error);
+      throw new Error(`Failed to switch to Sepolia: ${error.message}`);
     }
   };
 
