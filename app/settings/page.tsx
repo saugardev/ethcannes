@@ -342,42 +342,6 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* Account Settings */}
-            <div className="card bg-base-200/50 shadow-lg">
-              <div className="card-body">
-                <div className="flex items-center gap-3">
-                  <div className="badge badge-primary badge-lg">⚙️</div>
-                  <div>
-                    <h3 className="card-title text-lg">Account Settings</h3>
-                    <p className="text-base-content/70">
-                      Manage your account preferences
-                    </p>
-                  </div>
-                </div>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-primary btn-sm">Configure</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Privacy Settings */}
-            <div className="card bg-base-200/50 shadow-lg">
-              <div className="card-body">
-                <div className="flex items-center gap-3">
-                  <div className="badge badge-secondary badge-lg">🔒</div>
-                  <div>
-                    <h3 className="card-title text-lg">Privacy</h3>
-                    <p className="text-base-content/70">
-                      Control your privacy settings
-                    </p>
-                  </div>
-                </div>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-secondary btn-sm">Manage</button>
-                </div>
-              </div>
-            </div>
-
             {/* Wallet Connection */}
             <div className="card bg-base-200/50 shadow-lg">
               <div className="card-body">

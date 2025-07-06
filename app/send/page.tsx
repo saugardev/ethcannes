@@ -266,6 +266,17 @@ function SendPage() {
       setIsSimulating(true);
 
       try {
+        // Check if user has sufficient balance before simulation
+        const usdcBalance = balances.find((asset) => asset.symbol === "USDC");
+        if (
+          !usdcBalance ||
+          parseFloat(usdcBalance.balance) < parseFloat(amount)
+        ) {
+          console.warn("Insufficient balance for simulation");
+          setSimulation(null);
+          return;
+        }
+
         const result = await sdk.simulateTransfer({
           token: TRANSFER_TOKEN,
           amount: parseFloat(amount),
@@ -275,6 +286,20 @@ function SendPage() {
         setSimulation(result);
       } catch (error) {
         console.error("Simulation failed:", error);
+
+        // Handle specific error cases
+        if (error instanceof Error) {
+          if (error.message.includes("ca not applicable")) {
+            console.warn(
+              "Cross-chain account not applicable for this transfer. This may be due to insufficient balance on source chains or unsupported chain combination."
+            );
+          } else if (error.message.includes("CA not initialized")) {
+            console.warn(
+              "Cross-chain account not initialized. Please wait for initialization to complete."
+            );
+          }
+        }
+
         setSimulation(null);
       } finally {
         setIsSimulating(false);
@@ -292,6 +317,7 @@ function SendPage() {
     addressError,
     targetChainId,
     isCrossChain,
+    balances, // Add balances dependency
   ]);
 
   // Debounced address resolution
@@ -530,7 +556,7 @@ function SendPage() {
   return (
     <PageLayout title="Send">
       <LoginGate>
-        <div className="p-4 sm:p-6 lg:p-8 space-y-4 relative">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 relative mb-32">
           <div className="text-text-primary opacity-70">Send USDC</div>
 
           {/* Balance Display */}
@@ -703,6 +729,35 @@ function SendPage() {
                   </div>
                 </div>
               )}
+
+              {!simulation &&
+                !isSimulating &&
+                amount &&
+                parseFloat(amount) > 0 &&
+                resolvedAddress &&
+                !addressError && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 className="font-medium text-yellow-800 mb-2">
+                      ⚠️ Cross-chain Transfer Not Available
+                    </h3>
+                    <div className="text-sm text-yellow-700">
+                      <p>
+                        Cross-chain transfer simulation is not available for
+                        this combination. This could be due to:
+                      </p>
+                      <ul className="list-disc list-inside mt-2 space-y-1">
+                        <li>Insufficient balance on available source chains</li>
+                        <li>Unsupported chain combination</li>
+                        <li>Cross-chain account not fully initialized</li>
+                      </ul>
+                      <p className="mt-2">
+                        <strong>Tip:</strong> Try using regular Sepolia transfer
+                        instead, or wait for the cross-chain account to fully
+                        initialize.
+                      </p>
+                    </div>
+                  </div>
+                )}
             </>
           )}
 
@@ -717,7 +772,13 @@ function SendPage() {
                 !authenticated ||
                 !isInitialized ||
                 isResolvingAddress ||
-                (isCrossChain && isSimulating)
+                (isCrossChain && isSimulating) ||
+                (isCrossChain &&
+                  !simulation &&
+                  amount.length > 0 &&
+                  parseFloat(amount) > 0 &&
+                  resolvedAddress.length > 0 &&
+                  addressError.length === 0)
               }
               className="flex-1"
               icon={<PaperAirplaneIcon className="w-5 h-5" />}
@@ -915,6 +976,13 @@ function SendPage() {
                 chain to the target chain and recipient address. The transfer
                 may involve cross-chain bridging if needed.
               </p>
+              {!isInitialized && (
+                <p className="text-blue-700 text-sm mt-2">
+                  <strong>Note:</strong> Cross-chain account is still
+                  initializing. Please wait for initialization to complete
+                  before attempting transfers.
+                </p>
+              )}
             </div>
           )}
         </div>
