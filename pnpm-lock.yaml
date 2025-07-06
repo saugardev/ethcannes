@@ -5,8 +5,8 @@ dependencies:
     specifier: ^1.12.1
     version: 1.12.1
   '@avail-project/nexus':
-    specifier: 0.1.1-dev.2
-    version: 0.1.1-dev.2(@types/react-dom@19.1.6)(@types/react@19.1.8)(google-protobuf@3.21.4)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)(vitest@3.0.9)
+    specifier: 0.1.1-dev.4
+    version: 0.1.1-dev.4(@types/react-dom@19.1.6)(@types/react@19.1.8)(google-protobuf@3.21.4)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)(vitest@3.0.9)
   '@heroicons/react':
     specifier: ^2.2.0
     version: 2.2.0(react@19.1.0)
@@ -159,8 +159,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@avail-project/nexus@0.1.1-dev.2(@types/react-dom@19.1.6)(@types/react@19.1.8)(google-protobuf@3.21.4)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)(vitest@3.0.9):
-    resolution: {integrity: sha512-k+Y/8RaNqb/LBppqbNEsmJ24Ahglafnox2GG+HLJgSJRGvuJUDMDjWQnHsGu0pknNzzleO9i3It+EiQuF/eVlg==}
+  /@avail-project/nexus@0.1.1-dev.4(@types/react-dom@19.1.6)(@types/react@19.1.8)(google-protobuf@3.21.4)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)(vitest@3.0.9):
+    resolution: {integrity: sha512-uaurHAqwXLEo7VKRe5h/Z3Im9ZRQpW2wTUMTlbOV5fVQBmdgNTH1nWnCmcI3ewufV1KQhEaKzr4bEMVyPibTHw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
