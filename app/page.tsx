@@ -16,6 +16,7 @@ import {
   custom,
 } from "viem";
 import { sepolia } from "viem/chains";
+import RebalanceModal from "./components/rebalance-modal";
 
 interface HaloResult {
   etherAddresses?: { [key: string]: string };
@@ -38,6 +39,7 @@ function HomePage() {
   const [isCheckingApproval, setIsCheckingApproval] = useState(false);
   const [linkedCards, setLinkedCards] = useState<string[]>([]);
   const [isLoadingCards, setIsLoadingCards] = useState(false);
+  const [showRebalanceModal, setShowRebalanceModal] = useState(false);
 
   // Contract addresses and configuration
   const SEPOLIA_RPC_URL = "https://sepolia.drpc.org";
@@ -97,7 +99,14 @@ function HomePage() {
     } finally {
       setIsCheckingApproval(false);
     }
-  }, [authenticated, user, publicClient, USDC_CONTRACT_ADDRESS, USDC_ABI, HALO_PAYMENT_CONTRACT_ADDRESS]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    authenticated,
+    user,
+    publicClient,
+    USDC_CONTRACT_ADDRESS,
+    USDC_ABI,
+    HALO_PAYMENT_CONTRACT_ADDRESS,
+  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const approveUSDC = async (userAddress: `0x${string}`) => {
     try {
@@ -151,7 +160,8 @@ function HomePage() {
       await scanForHaloChips();
     } catch (error: unknown) {
       console.error("Error approving USDC:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
 
       // Provide more specific error messages
       if (errorMessage.includes("does not match the target chain")) {
@@ -215,7 +225,8 @@ function HomePage() {
       }
     } catch (error: unknown) {
       console.error("Error scanning HaLo chips:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       alert(`Error scanning HaLo chip: ${errorMessage}`);
     }
   };
@@ -242,7 +253,11 @@ function HomePage() {
         });
       } catch (switchError: unknown) {
         // If the chain hasn't been added to the wallet, add it
-        if (switchError instanceof Error && 'code' in switchError && switchError.code === 4902) {
+        if (
+          switchError instanceof Error &&
+          "code" in switchError &&
+          switchError.code === 4902
+        ) {
           await provider.request({
             method: "wallet_addEthereumChain",
             params: [
@@ -265,7 +280,8 @@ function HomePage() {
       }
     } catch (error: unknown) {
       console.error("Error switching to Sepolia:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       throw new Error(`Failed to switch to Sepolia: ${errorMessage}`);
     }
   };
@@ -325,7 +341,8 @@ function HomePage() {
       }, 2000);
     } catch (error: unknown) {
       console.error("Error registering HaLo address:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
 
       // Provide more specific error messages
       if (errorMessage.includes("does not match the target chain")) {
@@ -341,9 +358,7 @@ function HomePage() {
           "Network switch was rejected. Please manually switch to Sepolia."
         );
       } else {
-        console.error(
-          `Registration failed: ${errorMessage}`
-        );
+        console.error(`Registration failed: ${errorMessage}`);
         alert(`Registration failed: ${errorMessage}`);
       }
     }
@@ -383,7 +398,14 @@ function HomePage() {
     } finally {
       setIsLoadingCards(false);
     }
-  }, [authenticated, user, publicClient, linkedCards.length, HALO_PAYMENT_CONTRACT_ADDRESS, HALO_PAYMENT_ABI]);
+  }, [
+    authenticated,
+    user,
+    publicClient,
+    linkedCards.length,
+    HALO_PAYMENT_CONTRACT_ADDRESS,
+    HALO_PAYMENT_ABI,
+  ]);
 
   const shortenAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -537,7 +559,11 @@ function HomePage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
-              <button className="bg-black text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 font-medium transition-all duration-200 hover:bg-gray-800 active:scale-95 flex-1">
+              <button
+                className="bg-black text-white rounded-full px-6 py-3 flex items-center justify-center gap-2 font-medium transition-all duration-200 hover:bg-gray-800 active:scale-95 flex-1"
+                onClick={() => setShowRebalanceModal(true)}
+                disabled={!authenticated || !isInitialized}
+              >
                 <span className="text-lg">
                   <ScaleIcon className="w-5 h-5" />
                 </span>
@@ -615,6 +641,17 @@ function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Rebalance Modal */}
+        <RebalanceModal
+          isOpen={showRebalanceModal}
+          onClose={() => setShowRebalanceModal(false)}
+          balances={balances}
+          onRebalanceComplete={() => {
+            fetchBalances();
+            setShowRebalanceModal(false);
+          }}
+        />
       </LoginGate>
     </PageLayout>
   );
